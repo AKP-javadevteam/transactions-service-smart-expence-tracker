@@ -38,7 +38,7 @@ Header: Date,Merchant,Amount,Currency,Category
 
 #### Example: `my_transactions.csv`
 
-```csv
+
 Date,Merchant,Amount,Currency,Category
 2025-09-05T10:15:00Z,Grocery Mart,-75.50,EUR,Groceries
 2025-09-08T08:30:00Z,Metro Ticket,-2.90,EUR,Transport
