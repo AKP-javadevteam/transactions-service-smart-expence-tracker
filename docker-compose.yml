@@ -1,0 +1,46 @@
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: smart_expense_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      smart-expense-net:
+        aliases:
+          - postgres
+
+  transaction-service:
+    build: .
+    container_name: transaction-service
+    ports:
+      - "8083:8083"
+    environment:
+      - SERVER_PORT=8083
+      # Add database connection properties
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/smart_expense_db
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update # Creates/updates schema automatically
+      - SPRING_SQL_INIT_MODE=always
+      - SPRING_JPA_DEFER_DATASOURCE_INITIALIZATION=true
+    depends_on:
+      - postgres # Ensures postgres starts first
+    networks:
+      smart-expense-net:
+        aliases:
+          - transaction-service
+
+volumes:
+  postgres_data:
+
+networks:
+  smart-expense-net:
+    external: true
+    name: smart-expense-net
