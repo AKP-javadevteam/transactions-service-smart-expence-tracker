@@ -30,10 +30,7 @@ public class PublicTransactionController {
     // --- Your method for BULK CSV import ---
     @PostMapping("/import/csv")
     public ResponseEntity<Map<String, String>> importTransactionsFromCsv(@RequestParam("file") MultipartFile file, Authentication authentication) {
-        // TODO: Get userId from JWT
-       //String userId = "alice";
-
-        String userId = authentication.getName();
+        String userId = "test-user-no-auth";
 
 
         if (file.isEmpty()) {
@@ -87,7 +84,12 @@ public class PublicTransactionController {
     @PostMapping
     public ResponseEntity<Transaction> createTransaction(@RequestBody Transaction newTransaction, Authentication authentication){
         //  get userId from JWT from auth-service
-        String userId = authentication.getName();
+        String userId = "test-user-no-auth";
+
+        if (authentication != null) {
+            userId = authentication.getName();
+        }
+
         newTransaction.setUserId(userId);
 
         /*
